@@ -1,0 +1,7 @@
+Client ID
+654259802364-fphvpdonrami6mh20bs5jubnbhfkclir.apps.googleusercontent.com
+
+
+
+ Client secret 
+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
