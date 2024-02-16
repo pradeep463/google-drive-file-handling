@@ -16,6 +16,22 @@ function readApiCallData() {
     return [];
   }
 }
+function readFileCallData(id) {
+  try {
+    const data = fs.readFileSync(FILEPATH, "utf8");
+    if (data.trim() === "") {
+      // Handle empty file
+      return [];
+    }
+    return JSON.parse(data).length > 0
+      ? JSON.parse(data).filter((i) => i.id == id)
+      : [];
+  } catch (error) {
+    console.error("Error reading API call data:", error);
+    // Return empty array or handle error as appropriate for your application
+    return [];
+  }
+}
 
 // Function to write the API call data to the JSON file
 // Function to write the API call data to the JSON file synchronously

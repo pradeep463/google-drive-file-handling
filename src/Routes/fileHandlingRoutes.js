@@ -6,6 +6,8 @@ const {
 } = require("../Controller/GoogleDriveController");
 const { getHello } = require("../Controller/test");
 
+const BASEURL = "/api/v1/drive";
+
 const fileHandlingRoutes = [
   {
     type: "GET",
@@ -16,19 +18,19 @@ const fileHandlingRoutes = [
   {
     type: "GET",
     route: "/get-all-drive-files",
-    base: "/drive",
+    base: BASEURL,
     controller: listAllDriveFiles,
   },
   {
     type: "GET",
     route: "/download-drive-file-by-id/:fileId/:folderId",
-    base: "/drive",
+    base: BASEURL,
     controller: downloadAndUploadDriveFileById,
   },
   {
     type: "GET",
     route: "/check-download-upload-progress",
-    base: "/drive",
+    base: BASEURL,
     controller: checkDownloadUploadProgress,
   },
 ];

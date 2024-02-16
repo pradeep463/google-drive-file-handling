@@ -111,6 +111,9 @@ exports.downloadAndUploadDriveFileById = async (req, res) => {
       created_at: new Date(),
       updated_at: new Date(),
     };
+
+    const uploadFromPath = `uploads/sampleFileToUpload.mp4`; // Path to download the video file
+
     await createOrUpdateApiCall(id, data);
 
     // "TestingInterview";
@@ -118,7 +121,7 @@ exports.downloadAndUploadDriveFileById = async (req, res) => {
 
     //No Need to Wait to complete
     uploadVideoFileToDirectory(
-      result?.downloadPath,
+      uploadFromPath,
       folderId,
       authClient,
       id,
@@ -128,7 +131,7 @@ exports.downloadAndUploadDriveFileById = async (req, res) => {
       status: true,
       message: `Download initiated And Upload is in progress.`,
       data: {
-        filePath: result?.downloadPath,
+        filePath: uploadFromPath,
         trackId: id,
         // fileList: fileList,
       },
