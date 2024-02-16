@@ -5,7 +5,7 @@ const { google } = require("googleapis");
 const { TOKEN_PATH, CREDENTIALS_PATH, SCOPES } = require("../variables");
 const FILES = require("fs");
 const { Readable } = require("stream");
-const { createOrUpdateApiCall } = require("../functions");
+const { createOrUpdateJSON } = require("../functions");
 /**
  * Reads previously authorized credentials from the save file.
  *
@@ -116,7 +116,7 @@ async function listFilesInFolder(folderId, authClient) {
 
 async function downloadDriveFileById(fileId, authClient, id, data) {
   data.download = "INITIATED";
-  await createOrUpdateApiCall(id, data);
+  await createOrUpdateJSON(id, data);
 
   const downloadPath = `uploads/video_${fileId}.mp4`; // Path to download the video file
   const dest = FILES.createWriteStream(downloadPath);
@@ -135,7 +135,7 @@ async function downloadDriveFileById(fileId, authClient, id, data) {
           ...data,
           download: "COMPLETED",
         };
-        await createOrUpdateApiCall(id, data);
+        await createOrUpdateJSON(id, data);
         resolve({ downloadPath, data });
       })
       .on("error", (err) => {
@@ -161,7 +161,7 @@ async function downloadDriveFileById(fileId, authClient, id, data) {
           },
         };
         setTimeout(async () => {
-          await createOrUpdateApiCall(id, data);
+          await createOrUpdateJSON(id, data);
         }, 800);
       })
       .pipe(dest);
@@ -180,7 +180,7 @@ async function uploadVideoFileToDirectory(
   try {
     // Initialize upload: Create file metadata
     data.upload = "INITIATED";
-    await createOrUpdateApiCall(id, data);
+    await createOrUpdateJSON(id, data);
     const fileMetadata = {
       name: "uploaded_video.mp4", // Name for the uploaded file
       parents: [destinationDirectoryId], // ID of the destination directory
@@ -237,7 +237,7 @@ async function uploadVideoFileToDirectory(
                 },
               };
               setTimeout(async () => {
-                await createOrUpdateApiCall(id, data);
+                await createOrUpdateJSON(id, data);
               }, 800);
             }
           }),
@@ -248,7 +248,7 @@ async function uploadVideoFileToDirectory(
       ...data,
       upload: "COMPLETED",
     };
-    await createOrUpdateApiCall(id, data);
+    await createOrUpdateJSON(id, data);
 
     console.log("Video file uploaded successfully.");
   } catch (error) {

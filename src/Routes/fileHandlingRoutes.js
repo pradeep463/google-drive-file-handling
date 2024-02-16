@@ -6,13 +6,37 @@ const {
 } = require("../Controller/GoogleDriveController");
 const { getHello } = require("../Controller/test");
 
+/**
+ * The base URL for the file handling routes.
+ * @type {string}
+ */
 const BASEURL = "/api/v1/drive";
 
+/**
+ * Routes related to file handling.
+ * @type {object[]}
+ */
 const fileHandlingRoutes = [
   {
+    /**
+     * HTTP method for the route.
+     * @type {string}
+     */
     type: "GET",
+    /**
+     * Path for the route.
+     * @type {string}
+     */
     route: "/hello",
+    /**
+     * Base URL for the route.
+     * @type {string}
+     */
     base: "/test",
+    /**
+     * Controller function for handling the route.
+     * @type {Function}
+     */
     controller: getHello,
   },
   {

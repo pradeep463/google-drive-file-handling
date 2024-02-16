@@ -5,7 +5,10 @@ const { fileHandlingRoutes } = require("./fileHandlingRoutes");
 
 const router = express.Router();
 
-// Define an array containing all route configurations
+/**
+ * Define an array containing all route configurations.
+ * @type {object[][]}
+ */
 const allRoutes = [fileHandlingRoutes];
 
 // Iterate over each set of routes in the allRoutes array

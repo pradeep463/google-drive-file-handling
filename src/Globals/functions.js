@@ -1,12 +1,17 @@
 const fs = require("fs");
 
+// Path to the JSON file where API call data is stored
 const FILEPATH = "uploads/progress.json";
-// Function to read the API call data from the JSON file
-function readApiCallData() {
+
+/**
+ * Function to read JSON data from the file.
+ * @returns {Array} An array containing the JSON data read from the file.
+ */
+function readJsonData() {
   try {
     const data = fs.readFileSync(FILEPATH, "utf8");
     if (data.trim() === "") {
-      // Handle empty file
+      // Handle empty file by returning an empty array
       return [];
     }
     return JSON.parse(data);
@@ -16,11 +21,17 @@ function readApiCallData() {
     return [];
   }
 }
-function readFileCallData(id) {
+
+/**
+ * Function to read JSON data for a specific ID from the file.
+ * @param {string} id - The ID of the JSON data to retrieve.
+ * @returns {Array} An array containing the JSON data for the specified ID.
+ */
+function readDataById(id) {
   try {
     const data = fs.readFileSync(FILEPATH, "utf8");
     if (data.trim() === "") {
-      // Handle empty file
+      // Handle empty file by returning an empty array
       return [];
     }
     return JSON.parse(data).length > 0
@@ -33,9 +44,11 @@ function readFileCallData(id) {
   }
 }
 
-// Function to write the API call data to the JSON file
-// Function to write the API call data to the JSON file synchronously
-function writeApiCallData(data) {
+/**
+ * Function to write JSON data to the file synchronously.
+ * @param {Array} data - The JSON data to write to the file.
+ */
+function writeApiJsonData(data) {
   try {
     fs.writeFileSync(FILEPATH, JSON.stringify(data, null, 2));
   } catch (error) {
@@ -43,9 +56,13 @@ function writeApiCallData(data) {
   }
 }
 
-// Function to create or update an API call entry
-function createOrUpdateApiCall(id, newData) {
-  const apiCallData = readApiCallData();
+/**
+ * Function to create or update a JSON entry.
+ * @param {string} id - The ID of the JSON entry to create or update.
+ * @param {Object} newData - The new data to update the JSON entry with.
+ */
+function createOrUpdateJSON(id, newData) {
+  const apiCallData = readJsonData();
   const index = apiCallData.findIndex((call) => call.id === id);
   if (index !== -1) {
     // Update existing entry
@@ -54,10 +71,11 @@ function createOrUpdateApiCall(id, newData) {
     // Create new entry
     apiCallData.push({ id, ...newData });
   }
-  writeApiCallData(apiCallData);
+  writeApiJsonData(apiCallData);
   return;
 }
 
 module.exports = {
-  createOrUpdateApiCall,
+  createOrUpdateJSON,
+  readDataById,
 };

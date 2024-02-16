@@ -7,7 +7,14 @@ const {
 } = require("../Globals/GoogleAuths/GoogleAuthFunctions");
 const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
-const { createOrUpdateApiCall } = require("../Globals/functions");
+const { createOrUpdateJSON } = require("../Globals/functions");
+
+/**
+ * Retrieves a list of all files stored in Google Drive.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response containing file information or an error message.
+ */
 exports.listAllDriveFiles = async (req, res) => {
   try {
     const authClient = await authorize();
@@ -45,6 +52,12 @@ exports.listAllDriveFiles = async (req, res) => {
   }
 };
 
+/**
+ * Downloads a file from Google Drive by its ID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response indicating whether the download was initiated.
+ */
 exports.downloadTesting = async (req, res) => {
   try {
     const fileId = req.params.fileId || "";
@@ -69,6 +82,7 @@ exports.downloadTesting = async (req, res) => {
       .on("end", () => console.log("Download completed"))
       .on("error", (err) => console.error("Error downloading file:", err))
       .pipe(dest); // Pipe the response data to the destination stream
+
     res.status(200).json({
       status: true,
       message: `Download initiated.`,
@@ -93,13 +107,18 @@ exports.downloadTesting = async (req, res) => {
   }
 };
 
+/**
+ * Downloads a file from Google Drive by its ID and uploads it to a specified folder.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response indicating that the download was initiated and the upload is in progress.
+ */
 exports.downloadAndUploadDriveFileById = async (req, res) => {
   try {
     const fileId = req.params.fileId || "";
     const folderId = req.params.folderId || "";
     const authClient = await authorize();
     const id = uuidv4();
-    // const id = "8404ce9f-1b54-408f-b9fe-70d743ad95cb";
     let data = {
       id: id,
       download: "PENDING",
@@ -114,12 +133,10 @@ exports.downloadAndUploadDriveFileById = async (req, res) => {
 
     const uploadFromPath = `uploads/sampleFileToUpload.mp4`; // Path to download the video file
 
-    await createOrUpdateApiCall(id, data);
+    await createOrUpdateJSON(id, data);
 
-    // "TestingInterview";
     const result = await downloadDriveFileById(fileId, authClient, id, data);
 
-    //No Need to Wait to complete
     uploadVideoFileToDirectory(
       uploadFromPath,
       folderId,
@@ -133,7 +150,6 @@ exports.downloadAndUploadDriveFileById = async (req, res) => {
       data: {
         filePath: uploadFromPath,
         trackId: id,
-        // fileList: fileList,
       },
       error: {},
       extra: {},
@@ -155,6 +171,12 @@ exports.downloadAndUploadDriveFileById = async (req, res) => {
   }
 };
 
+/**
+ * Checks the progress of a download/upload operation by trackID.
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @returns {Object} The response containing the progress data or an error message.
+ */
 exports.checkDownloadUploadProgress = async (req, res) => {
   try {
     const trackID = req?.query?.trackID || "";

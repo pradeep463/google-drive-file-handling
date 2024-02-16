@@ -9,7 +9,7 @@ const {
   listFiles,
 } = require("./src/Globals/GoogleAuths/GoogleAuthFunctions");
 
-
+// Authorize and list files on startup
 authorize().then(listFiles).catch(console.error);
 
 // Initialize Express application
@@ -25,23 +25,26 @@ app.use(express.urlencoded({ extended: true, limit: "30mb" }));
 // Middleware for serving static files
 app.use("/public", express.static(path.join(__dirname, "uploads")));
 
+// Use router for handling routes
 app.use("/", router);
 
-// Start the server on port 5000
-app.listen(PORT, (err) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  console.log(`Server running on ${5000}`);
+// Start the server
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
 // Handle uncaught exceptions
 process.on("uncaughtException", (err) => {
-  console.log(err);
+  console.error("Uncaught Exception:", err);
+  server.close(() => {
+    process.exit(1);
+  });
 });
 
-// Handle uncaught promise rejections
+// Handle unhandled promise rejections
 process.on("unhandledRejection", (err) => {
-  console.log(err);
+  console.error("Unhandled Rejection:", err);
+  server.close(() => {
+    process.exit(1);
+  });
 });
